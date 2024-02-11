@@ -23,8 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //        System.out.println("ROLE"+optionalUser.get().getRole());
         if(optionalUser.isEmpty())
         {
-            System.out.println("UserDetailsServiceImpl ko có gì");
-            throw new UsernameNotFoundException("ko co gì",null);
+//            System.out.println("UserDetailsServiceImpl ko có gì");
+            throw new UsernameNotFoundException("User not found",null);
         }
         return new User(optionalUser.get().getEmail(),optionalUser.get().getPassword(),optionalUser.get().getAuthorities());
     }

@@ -15,20 +15,18 @@ public class WebShopApplication {
 	private UserRepository userRepository;
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebShopApplication.class, args);
+		SpringApplication.run(WebShopApplication.class,args);
+//		SpringApplication.run(WebShopApplication.class,args);
 	}
-
 	public void run(String... arg) {
-//		UserEntity adminAccount = userRepository.findByRole(Role.ADMIN).get();
-//		if (adminAccount == null) {
-//			UserEntity user = new UserEntity();
-//			user.setName("admin2");
-//			user.setEmail("admin2@gmail.com");
-//			user.setRole(Role.ADMIN);
-//			user.setPassword(new BCryptPasswordEncoder().encode("123"));
-//			userRepository.save(user);
-//		}
-
-
+		UserEntity adminAccount = userRepository.findByRole(Role.ADMIN).get();
+		if (adminAccount==null) {
+			UserEntity user = new UserEntity();
+			user.setName("admin");
+			user.setEmail("admin2@gmail.com");
+			user.setRole(Role.ADMIN);
+			user.setPassword(new BCryptPasswordEncoder().encode("123"));
+			userRepository.save(user);
+		}
 	}
 }
