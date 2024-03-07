@@ -16,7 +16,7 @@ public class WebShopApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebShopApplication.class,args);
-//		SpringApplication.run(WebShopApplication.class,args);
+		SpringApplication.run(WebShopApplication.class,args);
 	}
 	public void run(String... arg) {
 		UserEntity adminAccount = userRepository.findByRole(Role.ADMIN).get();
