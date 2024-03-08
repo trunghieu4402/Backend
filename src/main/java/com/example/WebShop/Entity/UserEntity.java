@@ -29,6 +29,8 @@ public class UserEntity implements UserDetails {
     private boolean IsActive=false;
     @OneToMany(mappedBy = "user")
     private Set<Order> Order= new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<Address> Address= new HashSet<>();
 //    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 //    @JsonIgnore
 //    private Set<CartItem> Cart= new HashSet<>();

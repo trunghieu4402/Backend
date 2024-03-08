@@ -25,6 +25,9 @@ public class Order {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",nullable = false,referencedColumnName ="id")
     private UserEntity user;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "address_id",nullable = false,referencedColumnName ="id")
+    private Address address;
 //
 //    @OneToMany(fetch = FetchType.LAZY,mappedBy = "order")
 //    private Set<CartItem> cartItems;
