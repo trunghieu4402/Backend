@@ -8,6 +8,8 @@ import com.example.WebShop.dto.CategoryDto;
 import com.example.WebShop.dto.ProductDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,30 +42,31 @@ public class CategoryImplService implements CategoryService {
         return mapper.map(category,CategoryDto.class);
 
     }
-    public void deleteCategory(Long id)
+    public ResponseEntity deleteCategory(Long id)
     {
-        if (this.categoryRepository.existsById(id))
+        if(this.categoryRepository.findById(id).isEmpty())
         {
-            Set<ProductDto> list= FindAllProductsByCate(id);
+            return new ResponseEntity<>("Category Not Found", HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            List<ProductEntity> list= this.productRepository.findALLByCategory(id);
             if(list!=null)
             {
-                this.categoryentity=this.mapper.map(GetALlProductByCate(id),CategoryEntity.class);
-                System.out.println(this.categoryentity);
+//                this.categoryentity=this.mapper.map(GetALlProductByCate(id),CategoryEntity.class);
+//                System.out.println(this.categoryentity);
                 list.forEach(i->
                 {
                     this.productRepository.deleteById(i.getPro_id());
                 });
                 this.categoryRepository.deleteById(id);
+                return new ResponseEntity<>("Delete Complete", HttpStatus.OK);
             }
             else
             {
                 this.categoryRepository.deleteById(id);
+                return new ResponseEntity<>("Delete Complete", HttpStatus.OK);
             }
-
-        }
-        else
-        {
-            throw new NoSuchElementException();
         }
     }
     public void UpdateCategory(CategoryDto categoryDto)
@@ -87,11 +90,10 @@ public class CategoryImplService implements CategoryService {
     }
     public Set<ProductDto> FindAllProductsByCate(Long id)
     {
-            Set<ProductEntity> list = new HashSet<>();
+            List<ProductEntity> list = new ArrayList<>();
             Set<ProductDto> ListDtos= new HashSet<>();
-            list= (Set<ProductEntity>) this.productRepository.findALLByCategory(id);
-            if (list!=null)
-            {
+            list= this.productRepository.findALLByCategory(id);
+        System.out.println(list.size());
                 list.forEach(i->
                 {
                     ProductDto productDto= this.mapper.map(i,ProductDto.class);
@@ -99,22 +101,32 @@ public class CategoryImplService implements CategoryService {
                 });
                 return ListDtos;
 
-            }
-            else
-            {
-                return null;
-            }
     }
-    public CategoryDto GetCategoryById(Long id)
+    public ResponseEntity GetCategoryById(Long id)
     {
-        if(this.categoryRepository.existsById(id))
+        if(this.categoryRepository.findById(id).isEmpty())
         {
-            CategoryDto categoryDto= this.mapper.map(this.categoryRepository.findById(id).get(),CategoryDto.class);
-            return categoryDto;
+            return new ResponseEntity<>("Category Not Found",HttpStatus.NOT_FOUND);
         }
         else
         {
-            return null;
+            CategoryDto categoryDto = this.mapper.map(this.categoryRepository.findById(id).get(),CategoryDto.class);
+
+            return new ResponseEntity<>(categoryDto,HttpStatus.OK);
+        }
+    }
+    public ResponseEntity<?> getProductsByCateID(Long id)
+    {
+        if(this.categoryRepository.findById(id).isEmpty())
+        {
+            return new ResponseEntity<>("Category Not Found",HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            CategoryDto categoryDto = this.GetALlProductByCate(id);
+            categoryDto.setProducts(this.FindAllProductsByCate(id));
+            System.out.println(this.GetALlProductByCate(id).getProducts().size());
+            return new ResponseEntity<>(categoryDto,HttpStatus.OK);
         }
     }
 }

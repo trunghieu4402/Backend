@@ -32,7 +32,7 @@ import java.util.Optional;
 @RestController
 @Controller
 @RequiredArgsConstructor
-public class AuthController {
+public class  AuthController {
     @Autowired
     private final AuthenticationManager authenticationManager;
     @Autowired
@@ -64,6 +64,9 @@ public class AuthController {
                     .put("username",user.get().getUsername())
                     .put("role", user.get().getRole())
                     .put("user_id",user.get().getId())
+                    .put("email",user.get().getEmail())
+                    .put("phoneNumber",user.get().getPhone())
+                    .put("address",user.get().getAddress())
                     .toString()
             );
             response.addHeader("Access-Control-Expose-Headers", "Authorization");

@@ -2,8 +2,8 @@ package com.example.WebShop.Entity;
 
 public enum OrderStatus {
     Pending,
-    Approved,
-    Shipped,
+    Receive,
+    Delivery,
     Complete,
     Refund,
     Cancel,

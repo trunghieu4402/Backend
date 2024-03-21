@@ -85,8 +85,8 @@ public class ProductController {
     @DeleteMapping("/deleteProduct")
     private ResponseEntity<?> DeleteProducts(@RequestParam("id") Long id) {
 
-            this.productService.DeleteProduct(id);
-            return ResponseEntity.ok("successfully");
+           return this.productService.DeleteProduct(id);
+//            return ResponseEntity.ok("successfully");
     }
     @PutMapping("/updateProduct")
     private ResponseEntity<?> UpdateProduct(@RequestPart("product") ProductDto productDto,

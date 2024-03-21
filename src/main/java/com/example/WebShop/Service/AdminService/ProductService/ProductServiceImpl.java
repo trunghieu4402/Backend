@@ -6,6 +6,7 @@ import com.example.WebShop.Repository.CategoryRepository;
 import com.example.WebShop.Repository.ImageRepository;
 import com.example.WebShop.Repository.ProductRepository;
 import com.example.WebShop.dto.ProductDto;
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
     private final ModelMapper mapper = new ModelMapper();
+    private static final Gson gson = new Gson();
     public List<ProductDto> getAllProducts()
     {
         List<ProductEntity> productEntities = this.productRepository.findAll();
@@ -50,46 +52,41 @@ public class ProductServiceImpl implements ProductService {
     {
         return  this.mapper.map(this.productRepository.findById(id).get(),ProductDto.class);
     }
-    public ResponseEntity<?> SearchProduct(String value, Long id)
+    public ResponseEntity<?>SearchProduct(String value, Long id)
     {
         List<ProductDto> productDtos= new ArrayList<>();
         List<ProductEntity> productEntities = new ArrayList<>();
         if(!value.isEmpty() && id!=0)
         {
              productEntities= this.productRepository.FindProductEntityByName(value, id);
-        } else if (!value.isEmpty()) {
+        } else if (!value.isEmpty() && id==0) {
             productEntities= this.productRepository.FindProductEntityByName(value);
         }
-        else
+        else if(value.isEmpty() && id!=0)
         {
             productEntities= this.productRepository.findALLByCategory(id);
         }
-
-        if (productEntities !=null)
+        else
         {
+            productEntities= this.productRepository.findAll();
+        }
             for(ProductEntity s : productEntities)
             {
                 productDtos.add(this.mapper.map(s,ProductDto.class));
             }
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("product not found");
-        }
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(productDtos);
+            return new ResponseEntity<>(productDtos,HttpStatus.OK);
     }
-    public void DeleteProduct(Long id)
+    public ResponseEntity<?> DeleteProduct(Long id)
     {
-        ProductEntity product = this.productRepository.findById(id).get();
-        if (product!=null)
+        Optional product = this.productRepository.findById(id);
+        if (product.isPresent())
         {
             this.productRepository.deleteById(id);
+            return new ResponseEntity<>(gson.toJson("Delete Successfull"),HttpStatus.OK);
         }
         else
         {
-
-            throw  new NoSuchElementException();
+            return  new ResponseEntity<>("Product NOT FOUND", HttpStatus.NOT_FOUND);
         }
     }
     public void UpdateProducts(ProductDto productDto)

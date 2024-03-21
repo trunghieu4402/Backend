@@ -33,7 +33,6 @@ public class AuthServiceImpl implements AuthService {
        UserEntity user= userRepository.save(userEntity);
 
         Cart cart = new Cart();
-        cart.setTotal_amount(0D);
 //        order.setAmount(0D);
         cart.setUser(user);
         this.cartRepository.save(cart);

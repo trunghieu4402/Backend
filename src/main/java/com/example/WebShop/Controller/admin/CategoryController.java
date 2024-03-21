@@ -28,10 +28,11 @@ public class CategoryController {
         return ResponseEntity.ok(this.categoryService.addCategory(categoryDto));
     }
     @DeleteMapping(value = "/deleteCategory")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteCategory(@RequestParam("id") Long id) {
-        this.categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteCategory(@RequestParam("id") Long id) {
+        System.out.println(id);
+       return this.categoryService.deleteCategory(id);
+//        return ResponseEntity.noContent().build();
     }
     @PutMapping(value = "/updateCategory")
     public ResponseEntity<?> updateCategory(@RequestBody CategoryDto categoryDto)
@@ -40,8 +41,14 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping(value = "/GetCategoryById")
-    public CategoryDto categoryDto(@RequestParam("id") Long id)
+    public ResponseEntity<?> categoryDto(@RequestParam("id") Long id)
     {
         return this.categoryService.GetCategoryById(id);
     }
+
+//    @GetMapping(value = "/getProductsByCateID ")
+//    public ResponseEntity<?> getProductsByCateID(@RequestParam("id") Long id)
+//    {
+//        return this.categoryService.getProductsByCateID(id);
+//    }
 }

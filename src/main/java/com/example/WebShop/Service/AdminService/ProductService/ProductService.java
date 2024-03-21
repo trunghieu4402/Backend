@@ -14,6 +14,6 @@ public interface ProductService {
 
     public ResponseEntity<?>SearchProduct(String value, Long id);
 
-    public void DeleteProduct(Long id);
+    public ResponseEntity<?> DeleteProduct(Long id);
     public void UpdateProducts(ProductDto productDto);
 }

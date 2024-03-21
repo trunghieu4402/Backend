@@ -1,11 +1,14 @@
 package com.example.WebShop.Service.CustomerService.OrderService;
 
+import com.example.WebShop.Entity.OrderStatus;
+import com.example.WebShop.dto.ItemDto;
 import com.example.WebShop.dto.OrderDto;
-import com.example.WebShop.dto.ProductDto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface OrderService {
-    public List<OrderDto> getAllOrder(Long id_customer);
-    public void addOrder(Long id, List<ProductDto> productDto);
+    public ResponseEntity<?> getAllOrder();
+    public ResponseEntity<?> CreateOrder(String email, List<ItemDto> itemDtos, Long address);
+    public ResponseEntity<?> UpdateOrderByUser(Long id, OrderStatus status);
 }

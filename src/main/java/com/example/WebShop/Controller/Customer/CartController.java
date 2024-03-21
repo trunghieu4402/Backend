@@ -1,47 +1,54 @@
 package com.example.WebShop.Controller.Customer;
 
 
-import com.example.WebShop.Entity.CartItem;
-import com.example.WebShop.Entity.ProductEntity;
-import com.example.WebShop.Repository.UserRepository;
+import com.example.WebShop.Filter.JwtRequestFilter;
 import com.example.WebShop.Service.CustomerService.CartService.CartService;
-import com.example.WebShop.dto.AddProductInCartDto;
-import com.example.WebShop.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customer/Cart")
 public class CartController {
     @Autowired
     private CartService cartService;
+    @Autowired
+     private JwtRequestFilter jwtRequestFilter;
     @PostMapping("/add")
-    public ResponseEntity<?> addtoCart(@RequestBody AddProductInCartDto product)
+    public ResponseEntity<?> addtoCart(@RequestBody Long pro_id)
     {
-       return cartService.AddToCart(product);
+        String email=jwtRequestFilter.getUserDetails().getUsername();
+       return cartService.AddToCart(pro_id,email);
     }
+//    @GetMapping("")
+//    public ResponseEntity<?> getCart(@RequestParam("id") Long id)
+//    {
+//        return this.cartService.GetCart(id);
+//    }
     @GetMapping("")
-    public ResponseEntity<?> getCart(@RequestParam("id") Long id)
+    public ResponseEntity<?> getCart()
     {
-        return this.cartService.GetCart(id);
+        UserDetails userDetails = jwtRequestFilter.getUserDetails();
+//        return new ResponseEntity<>(userDetails.getUsername(), HttpStatus.OK);
+
+        return this.cartService.GetCart(userDetails.getUsername());
     }
 
 
     @PostMapping("/deleteItem")
-    public ResponseEntity<?> RemoveItem(@RequestBody  AddProductInCartDto product )
+    public ResponseEntity<?> RemoveItem(@RequestBody  Long pro_id )
     {
-        return cartService.RemoveItem(product);
+        String email=jwtRequestFilter.getUserDetails().getUsername();
+        return cartService.RemoveItem(pro_id, email);
 
     }
     @PostMapping("/deleteAllOfItem")
-    public ResponseEntity<?> RemoveAllOfItem(@RequestBody  AddProductInCartDto product )
+    public ResponseEntity<?> RemoveAllOfItem(@RequestBody  Long pro_id  )
     {
-        return cartService.RemoveAllOfItem(product);
+        String email=jwtRequestFilter.getUserDetails().getUsername();
+        return cartService.RemoveAllOfItem(pro_id,email);
     }
 }

@@ -1,10 +1,12 @@
 package com.example.WebShop.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,12 +24,15 @@ public class Order {
     private OrderStatus status;
     private UUID TrackingID;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "user_id",nullable = false,referencedColumnName ="id")
     private UserEntity user;
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "address_id",nullable = false,referencedColumnName ="id")
+    @JsonIgnore
     private Address address;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "order")
+    private List<OrderItem> orderItems;
 //
 //    @OneToMany(fetch = FetchType.LAZY,mappedBy = "order")
 //    private Set<CartItem> cartItems;
